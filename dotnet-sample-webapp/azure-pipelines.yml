@@ -1,0 +1,42 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  buildConfiguration: 'Release'
+  azureSubscription: 'conn2'
+  appName: 'my-dotnet-webapp-shubham123'
+  resourceGroupName: 'myResourceGroup'
+  dotnetVersion: '7.0.x'                                 # FIXED version format
+
+steps:
+- task: UseDotNet@2
+  displayName: 'Install .NET SDK'
+  inputs:
+    packageType: 'sdk'
+    version: '$(dotnetVersion)'
+
+- script: dotnet restore
+  displayName: 'Restore NuGet packages'
+
+- script: dotnet build --configuration $(buildConfiguration)
+  displayName: 'Build project'
+
+- script: dotnet publish --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)
+  displayName: 'Publish project'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+
+- task: AzureWebApp@1
+  displayName: 'Deploy Azure Web App'
+  inputs:
+    azureSubscription: $(azureSubscription)   # Service connection you created in Azure DevOps
+    appName: $(appName)
+    package: '$(Build.ArtifactStagingDirectory)'
+    resourceGroupName: $(resourceGroupName)

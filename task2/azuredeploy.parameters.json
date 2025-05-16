@@ -1,0 +1,11 @@
+{
+  "parameters": {
+    "location": { "value": "Central US" },
+    "storageAccountName": { "value": "shubstorageacct123" },
+    "appServicePlanName": { "value": "shub-webapp-plan" },
+    "webAppName": { "value": "shub-dotnet-webapp" },
+    "functionAppName": { "value": "shub-funcapp" },
+    "functionAppHostingPlanName": { "value": "shub-funcapp-plan" },
+    "keyVaultName": { "value": "shub-keyvault" }
+  }
+}
